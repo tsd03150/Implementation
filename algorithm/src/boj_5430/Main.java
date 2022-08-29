@@ -1,6 +1,8 @@
 package boj_5430;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Scanner;
 
 class Main {
 
@@ -8,51 +10,51 @@ class Main {
         Scanner kb = new Scanner(System.in);
         int t = kb.nextInt();
         StringBuilder answer = new StringBuilder();
+
         while (t-- > 0) {
             char[] cmd = kb.next().toCharArray();
             int n = kb.nextInt();
             String str = kb.next();
             str = str.substring(1, str.length() - 1);
-            Deque<Integer> Q = new LinkedList<>();
-            for (String tmp : str.split(",")) {
-                if (!tmp.equals("")) {
-                    Q.offer(Integer.parseInt(tmp));
+            Deque<Integer> dQ = new ArrayDeque<>();
+            for (String s : str.split(",")) {
+                if (!s.equals("")) {
+                    dQ.offer(Integer.parseInt(s));
                 }
             }
             boolean right = false;
-            boolean flag = false;
+            boolean flag= false;
             for (char c : cmd) {
                 if (c == 'R') {
                     right = !right;
                 } else {
-                    if (Q.isEmpty()) {
+                    if (dQ.size() == 0) {
                         answer.append("error" + "\n");
                         flag = true;
                         break;
                     }
                     if (right) {
-                        Q.pollLast();
+                        dQ.pollLast();
                     } else {
-                        Q.pollFirst();
+                        dQ.pollFirst();
                     }
                 }
             }
-            if (!flag) {
-                if (Q.isEmpty()) {
-                    answer.append("[]" + "\n");
-                } else {
-                    answer.append("[");
-                    if (!right) {
-                        while (Q.size() > 1) {
-                            answer.append(Q.pollFirst() + ",");
-                        }
+            if (flag) {
+                continue;
+            }
+            if (dQ.size() == 0) {
+                answer.append("[]" + "\n");
+            } else {
+                answer.append("[");
+                while (dQ.size() > 1) {
+                    if (right) {
+                        answer.append(dQ.pollLast() + ",");
                     } else {
-                        while (Q.size() > 1) {
-                            answer.append(Q.pollLast() + ",");
-                        }
+                        answer.append(dQ.pollFirst() + ",");
                     }
-                    answer.append(Q.pollFirst() + "]" + "\n");
                 }
+                answer.append(dQ.pollLast() +"]" + "\n");
             }
         }
         System.out.println(answer);
